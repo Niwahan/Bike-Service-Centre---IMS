@@ -1,0 +1,45 @@
+﻿@page "/inventorydetails"
+@using NiwaCoursework.Data;
+@inject NavigationManager NavManager;
+<MudAppBar Color="Color.Transparent" Fixed="false" Class="mt-4">
+    <MudText Typo="Typo.h5" Class="fw-bold">Inventory Item History</MudText>
+            <MudSpacer />
+                <div class="align-users-center">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@Report">Show Report</MudButton>
+                </div>           
+        </MudAppBar>
+<MudSimpleTable Style="overflow-x: auto;" Class="mt-5">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Total Quantity Taken</th>
+            <th>Last Taken Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in items)
+        {
+            @if (item.TotalQuantityTaken > 0)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.TotalQuantityTaken</td>
+                    <td>@item.LastApprovedDate.ToString("MMM dd, yyyy h:mm tt")</td>
+                </tr>
+            }
+        }
+    </tbody>
+</MudSimpleTable>
+
+
+@code {
+    List<Item> items { get; set; }
+    protected override void OnInitialized()
+    {
+        items = ItemRequestService.ReadItem();
+    }
+    public void Report()
+    {
+        NavManager.NavigateTo("/graph");
+    }
+}

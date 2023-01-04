@@ -1,0 +1,113 @@
+﻿@page "/approve"
+@using NiwaCoursework.Data;
+@inject ISnackbar Snackbar
+@if (isOpen == true)
+{
+    <MudAppBar Color="Color.Transparent" Fixed="false" Class="mt-4">
+        <MudText Typo="Typo.h5" Class="fw-bold">Requests for Items</MudText>
+    </MudAppBar>
+
+        <MudSimpleTable Style="overflow-x: auto;" Class="mt-4">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Requested Date</th>
+                    <th>Requested By</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var requests in itemReqs)
+                {
+                    @if (requests.IsApproved == false)
+                    {
+                        <tr>
+                            <td>@requests.Name</td>
+                            <td>@requests.Quantity</td>
+                            <td>@requests.RequestedDate.ToString("MMM dd, yyyy h:mm tt")</td>
+                            <td>@requests.RequestedBy</td>
+                            <td>
+                                <MudButton OnClick="()=>ApproveRequest(requests)" Variant="Variant.Filled" Color="Color.Primary" class="mt-3">
+                                    Approve
+                                </MudButton>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </MudSimpleTable>
+}
+
+    <MudAppBar Color="Color.Transparent" Fixed="false" Class="mt-4">
+    <MudText Typo="Typo.h5" Class="fw-bold">Approved Item Requests</MudText>
+</MudAppBar>
+
+<MudSimpleTable Style="overflow-x: auto;" Class="mt-4">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Requested Date</th>
+            <th>Requested By</th>
+            <th>Approved Date</th>
+            <th>Approved By</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var requests in itemReqs)
+        {
+            @if (requests.IsApproved == true)
+            {
+                <tr>
+                    <td>@requests.Name</td>
+                    <td>@requests.Quantity</td>
+                    <td>@requests.RequestedDate.ToString("MMM dd, yyyy h:mm tt")</td>
+                    <td>@requests.RequestedBy</td>
+                    <td>@requests.ApprovedDate.ToString("MMM dd, yyyy h:mm tt")</td>
+                    <td>@requests.ApprovedBy</td>
+                </tr>
+            }
+        }
+    </tbody>
+</MudSimpleTable>
+
+
+@code {
+    List<ItemRequest> itemReqs { get; set; }
+    ItemRequest approveItemRequest { get; set; }
+    bool showApproveMessage = false;
+    bool showErrorMessage = false;
+    public string errorMessage = "";
+    public DateTime approvedDate = DateTime.Now;
+    private bool isApproved = false;
+    public bool isOpen { get; set; }
+    [CascadingParameter]
+    GlobalState globalState { get; set; }
+    protected override void OnInitialized()
+    {
+        isOpen = ItemRequestService.CheckTime();
+        itemReqs = ItemRequestService.ReadItemReq();
+    }
+
+    public void ApproveRequest(ItemRequest itemRequest)
+    {
+        try
+        {
+            approveItemRequest = itemRequest;
+            showApproveMessage = true;
+            isApproved = true;
+            Snackbar.Add("Approved", Severity.Success);
+            itemReqs = ItemRequestService.Approve(approveItemRequest.Id, approveItemRequest.Name, globalState.CurrentUser.Username, approvedDate, isApproved);
+            StateHasChanged();
+            ItemRequestService.AddOtherItemDetail(approveItemRequest.Name, approvedDate, approveItemRequest.Quantity);
+            approveItemRequest = null;
+            
+        }
+        catch (Exception e)
+        {
+            showErrorMessage = true;
+            errorMessage = e.Message;
+        }
+    }
+}

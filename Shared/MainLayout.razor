@@ -1,0 +1,35 @@
+﻿@inherits LayoutComponentBase
+@using NiwaCoursework.Data;
+@inject NavigationManager NavManager
+<MudThemeProvider />
+<MudSnackbarProvider />
+<div class="page">
+
+	@if (globalState.CurrentUser != null)
+	{
+		<div class="sidebar">
+			<NavMenu Username="@globalState.CurrentUser.Username" UserRole="@globalState.CurrentUser.Role" LogOut="LogOut" />
+		</div>
+	}
+	<main>
+		<article class="content px-4">
+			<CascadingValue Value="@globalState">
+				@Body
+			</CascadingValue>
+		</article>
+	</main>
+</div>
+@code
+{
+	public GlobalState globalState = new GlobalState();
+	public User user = new User();
+	protected override void OnInitialized()
+	{
+		UserServices.SeedUsers();
+	}
+	private void LogOut()
+	{
+		globalState.CurrentUser = null;
+		NavManager.NavigateTo("/login");
+	}
+}

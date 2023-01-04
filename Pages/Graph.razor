@@ -1,0 +1,41 @@
+﻿@page "/graph"
+@using NiwaCoursework.Data
+@inject NavigationManager NavManager;
+
+<MudAppBar Color="Color.Transparent" Fixed="false" Class="mt-4">
+    <MudText Typo="Typo.h5" Class="fw-bold">Bar Chart</MudText>
+    <MudSpacer />
+    <div class="align-users-center">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@GoBack">Go Back</MudButton>
+    </div>
+</MudAppBar>
+<div>
+    <MudChart ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
+</div>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        datas = ItemRequestService.GetChartData();
+        labels = ItemRequestService.GetChartLabel();
+        doubleDatas = datas.ToArray();
+        stringLabels = labels.ToArray();
+        Series = new List<ChartSeries>()
+        {
+        new ChartSeries() { Name = "Total Quantity Taken", Data = doubleDatas },
+        };
+        XAxisLabels = stringLabels;
+        StateHasChanged();
+    }
+    public void GoBack()
+    {
+        NavManager.NavigateTo("/inventorydetails");
+    }
+    public static List<double> datas;
+    public static List<string> labels;
+    public static double[] doubleDatas;
+    public static string[] stringLabels;
+    public List<ChartSeries> Series;
+    public string[] XAxisLabels;
+}

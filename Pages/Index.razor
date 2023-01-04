@@ -1,0 +1,19 @@
+﻿@page "/"
+@using NiwaCoursework.Data
+@inject NavigationManager NavManager
+@code {
+    [CascadingParameter]
+    private GlobalState globalState { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (globalState.CurrentUser == null)
+        {
+            NavManager.NavigateTo("/login");
+        }
+        else
+        {
+            NavManager.NavigateTo("/home");
+        }
+    }
+}

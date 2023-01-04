@@ -1,0 +1,58 @@
+﻿@page "/login"
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@using System.Reflection;
+@using Newtonsoft.Json;
+@using MudBlazor;
+@using NiwaCoursework.Data;
+@inject NavigationManager NavManager
+<MudPaper Height="100%" Width="100%">
+    <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+        <MudPaper Height="100%" Width="100%" Square="false" Class="mud-theme-primary">
+            <MudItem xs="8" sm="4" Class="mx-auto pa-6">
+                        <MudCard>
+                            <MudCardHeader>
+                                <MudText Typo="Typo.h4">Login</MudText>
+                            </MudCardHeader>
+                            <MudCardContent>
+                                <MudTextField Label="Username" @bind-Value="Username" />
+                                <MudTextField Label="Password"
+                                              InputType="InputType.Password" @bind-Value="Password" />
+                                @if (showError == true)
+                                {
+                                    <MudAlert class="mt-3" Severity="Severity.Error">@loginErrorMessage</MudAlert>
+                                }
+                                <MudCardActions class="row mt-5 justify-content-center">
+                                    <MudButton OnClick="LoginUser" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="col-md-3">Login</MudButton>
+                                </MudCardActions>
+                            </MudCardContent>
+                        </MudCard>
+                </MudItem>
+        </MudPaper>
+    </MudContainer>
+</MudPaper>
+
+    
+
+@code {
+    bool showError = false;
+    private string loginErrorMessage = "";
+    private string Username { get; set; }
+    private string Password { get; set; }
+    private List<User> users { get; set; }
+    [CascadingParameter]
+    GlobalState globalState { get; set; }
+    public void LoginUser()
+    {
+        try
+        {
+            globalState.CurrentUser = UserServices.Login(Username, Password);
+            NavManager.NavigateTo("/home");
+        }
+        catch (Exception e)
+        {
+            showError = true;
+            loginErrorMessage = e.Message;
+        }
+    }
+}

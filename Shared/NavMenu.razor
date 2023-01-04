@@ -1,0 +1,81 @@
+﻿@using NiwaCoursework.Data
+@inject NavigationManager NavManager;
+<div class="top-row ps-3 navbar navbar-dark">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="">Bike Service Centre - IMS</a>
+		<button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+	</div>
+</div>
+
+<div class='@(_collapseNavMenu ? "collapse" : "")' @onclick="ToggleNavMenu">
+	<nav class="flex-column">
+		<div class="nav-item px-3"><h5 class="text-light">Welcome <strong>@Username</strong>!</h5></div>
+		<div class="nav-item px-3">
+			<NavLink class="nav-link" href="home">
+				<span class="oi oi-dashboard" /> Home
+			</NavLink>
+		</div>
+		
+		@if (UserRole == "Admin")
+		{
+			<div class="nav-item px-3">
+				<NavLink class="nav-link" href="users">
+					<span class="oi oi-person" aria-hidden="true"></span> Users
+				</NavLink>
+			</div>
+		}
+		<div class="nav-item px-3">
+			<NavLink class="nav-link" href="inventory">
+				<span class="oi oi-folder" aria-hidden="true"></span> Inventory
+			</NavLink>
+		</div>
+		@if (UserRole == "Admin")
+		{
+			<div class="nav-item px-3">
+				<NavLink class="nav-link" href="approve">
+					<span class="oi oi-circle-check" aria-hidden="true"></span> Approve Requests
+				</NavLink>
+			</div>
+			<div class="nav-item px-3">
+				<NavLink class="nav-link" href="inventorydetails">
+					<span class="oi oi-laptop" aria-hidden="true"></span> Inventory Details
+				</NavLink>
+			</div>
+		}
+		@if (UserRole == "Staff")
+		{
+			<div class="nav-item px-3">
+				<NavLink class="nav-link" href="inventorylog">
+					<span class="oi oi-list-rich" aria-hidden="true"></span> Inventory Log
+				</NavLink>
+			</div>
+		}
+
+		<div class="nav-item px-3">
+			<NavLink class="nav-link text-danger" role="button" @onclick="LogOut">
+				<span class="oi oi-account-logout" /> Logout
+			</NavLink>
+		</div>
+	</nav>
+</div>
+
+@code {
+
+	[Parameter]
+	public string Username { get; set; }
+
+	[Parameter]
+	public string UserRole { get; set; }
+
+	[Parameter]
+	public EventCallback LogOut { get; set; }
+
+	private bool _collapseNavMenu { get; set; } = true;
+
+	private void ToggleNavMenu()
+	{
+		_collapseNavMenu = !_collapseNavMenu;
+	}
+}
