@@ -118,19 +118,20 @@
                 successMessage = false;
                 reqItemMessage = "Enter the details properly!";
             }
-            
+
             else
             {
-                showError = false;
+                showError = false;                
+                itemReqs = ItemRequestService.AddItemReq(Name, Quantity, globalState.CurrentUser.Username);
                 successMessage = true;
                 reqSuccessMessage = "Item Requested Successfully! Please wait for approval.";
-                itemReqs = ItemRequestService.AddItemReq(Name, Quantity, globalState.CurrentUser.Username);
             }
 
         }
         catch (Exception e)
         {
             showError = true;
+            successMessage = false;
             reqItemMessage = e.Message;
         }
     }
