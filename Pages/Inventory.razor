@@ -5,12 +5,12 @@
 @using NiwaCoursework.Services;
 @inject ISnackbar Snackbar;
 <MudAppBar Color="Color.Transparent" Fixed="false" Class="mt-4">
-     <MudText Typo="Typo.h5" Class="fw-bold">Inventory</MudText>
+    <MudText Typo="Typo.h5" Class="fw-bold">Inventory</MudText>
     <MudSpacer />
     @if (globalState.CurrentUser?.Role == "Admin" && showItemForm != true)
     {
         <div class="align-users-center">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ShowForm">Add Items</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="ShowForm">Add Items</MudButton>
         </div>
     }
 </MudAppBar>
@@ -20,15 +20,14 @@
         <MudCardContent>
             <MudForm>
                 <MudTextField Label="Name" @bind-Value="Name" Required="true" RequiredError="Name is required!" />
-                <MudTextField Label="Quantity" @bind-Value="Quantity" Required="true" RequiredError="Quantity is required!"/>
-                <MudDatePicker Label="Added Date" Editable="true" @bind-Value="AddedDate" Placeholder="Select Date" />
+                <MudTextField Label="Quantity" @bind-Value="Quantity" Required="true" RequiredError="Quantity is required!" />
 
                 @if (showError == true)
                 {
                     <MudAlert Severity="Severity.Error">@addItemMessage</MudAlert>
                 }
-                <MudButton OnClick="AddItem" Variant="Variant.Filled" Color="Color.Primary" class="mt-3 me-2">Add Item</MudButton>
-                <MudButton OnClick="HideForm" Variant="Variant.Filled" Color="Color.Primary" class="mt-3">Close</MudButton>
+                <MudButton OnClick="AddItem" Variant="Variant.Filled" Color="Color.Tertiary" class="mt-3 me-2">Add Item</MudButton>
+                <MudButton OnClick="HideForm" Variant="Variant.Filled" Color="Color.Tertiary" class="mt-3">Close</MudButton>
             </MudForm>
         </MudCardContent>
     </MudCard>
@@ -40,7 +39,7 @@
             <tr>
                 <th>Name</th>
                 <th>Quantity</th>
-                <th>Added Date</th> 
+                <th>Added Date</th>
                 @if (globalState.CurrentUser?.Role == "Admin")
                 {
                     <th>Actions</th>
@@ -57,8 +56,8 @@
                     <td>@item.AddedDate.ToString("MMM dd, yyyy h:mm tt")</td>
                     @if (globalState.CurrentUser?.Role == "Admin")
                     {
-                        <td>                            
-                            <MudButton OnClick="()=>DeleteItem(item)" Variant="Variant.Filled" Color="Color.Primary" class="mt-3">
+                        <td>
+                            <MudButton OnClick="()=>DeleteItem(item)" Variant="Variant.Filled" Color="Color.Tertiary" class="mt-3">
                                 Delete
                             </MudButton>
                         </td>
@@ -109,15 +108,13 @@
         {
             if (String.IsNullOrEmpty(Name) && Quantity == 0)
             {
-                showError = true;
-                addItemMessage = "Please fill the form properly!";
+                Snackbar.Add("Please fill the form properly!", Severity.Error);
             }
             else
             {
-                if (AddedDate == DateTime.MinValue)
-                {
-                    AddedDate = DateTime.Now;
-                }
+
+                AddedDate = DateTime.Now;
+
                 items = ItemService.AddItem(Name, Quantity, AddedDate);
                 Snackbar.Add("Item Added To Inventory !", Severity.Success);
             }
@@ -126,19 +123,6 @@
         {
             showError = true;
             addItemMessage = e.Message;
-        }
-    }
-    private void UpdateItem(Item item)
-    {
-        try
-        {
-            updateItem = item;
-            items = ItemRequestService.UpdateItem(updateItem.Name, AddQuantity);
-            updateItem = null;
-        }
-        catch (Exception e)
-        {
-            updateErrorMessage = e.Message;
         }
     }
     private void DeleteItem(Item item)
@@ -150,6 +134,7 @@
                 deleteItemMessage = "";
                 items = ItemService.DeleteItem(deleteItem.Name);
                 deleteItem = null;
+                Snackbar.Add("Item Deleted From Inventory !", Severity.Info);
             }
             catch (Exception e)
             {

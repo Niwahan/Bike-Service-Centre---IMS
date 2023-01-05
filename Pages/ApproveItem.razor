@@ -29,7 +29,7 @@
                             <td>@requests.RequestedDate.ToString("MMM dd, yyyy h:mm tt")</td>
                             <td>@requests.RequestedBy</td>
                             <td>
-                                <MudButton OnClick="()=>ApproveRequest(requests)" Variant="Variant.Filled" Color="Color.Primary" class="mt-3">
+                            <MudButton OnClick="()=>ApproveRequest(requests)" Variant="Variant.Filled" Color="Color.Tertiary" class="mt-3">
                                     Approve
                                 </MudButton>
                             </td>
@@ -77,7 +77,6 @@
 @code {
     List<ItemRequest> itemReqs { get; set; }
     ItemRequest approveItemRequest { get; set; }
-    bool showApproveMessage = false;
     bool showErrorMessage = false;
     public string errorMessage = "";
     public DateTime approvedDate = DateTime.Now;
@@ -96,7 +95,6 @@
         try
         {
             approveItemRequest = itemRequest;
-            showApproveMessage = true;
             isApproved = true;
             Snackbar.Add("Approved", Severity.Success);
             itemReqs = ItemRequestService.Approve(approveItemRequest.Id, approveItemRequest.Name, globalState.CurrentUser.Username, approvedDate, isApproved);
@@ -109,6 +107,7 @@
         {
             showErrorMessage = true;
             errorMessage = e.Message;
+            Snackbar.Add(errorMessage, Severity.Error);
         }
     }
 }

@@ -47,7 +47,7 @@ namespace NiwaCoursework.Services
             }
             return user;
         }
-        // For Users
+
         public static List<User> Read()
         {
             string path = GetUsersPath();

@@ -1,27 +1,26 @@
 ﻿@page "/inventorylog"
 @using NiwaCoursework.Data;
 @using NiwaCoursework.Services;
+@inject ISnackbar Snackbar
 @if (isOpen == true)
 {
-    @if (globalState.CurrentUser?.Role == "Staff")
-    {
-        <MudAppBar Color="Color.Transparent" Fixed="false" Class="mb-3">
-            <div><h1>Item Records</h1></div>
-            <MudSpacer />
-            @if (showRequestForm != true)
-            {
-                <div class="align-users-center">
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ShowForm">Request Items</MudButton>
-                </div>
-            }
-        </MudAppBar>
-    }
+
+    <MudAppBar Color="Color.Transparent" Fixed="false" Class="mt-4">
+        <MudText Typo="Typo.h5" Class="fw-bold">Item Records</MudText>
+        <MudSpacer />
+        @if (showRequestForm != true)
+        {
+            <div class="align-users-center">
+                <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="ShowForm">Request Items</MudButton>
+            </div>
+        }
+    </MudAppBar>
     @if (showRequestForm == true)
     {
         <MudCard class="mt-5">
             <MudCardContent>
                 <MudForm>
-                    <MudSelect @bind-Value="Name" Label="Select Item" AdornmentColor="Color.Secondary">
+                    <MudSelect @bind-Value="Name" Label="Select Item" AdornmentColor="Color.Tertiary">
                         @foreach (var item in items)
                         {
                             <MudSelectItem Value="@item.Name">@item.Name</MudSelectItem>
@@ -32,12 +31,8 @@
                     {
                         <MudAlert Severity="Severity.Error">@reqItemMessage</MudAlert>
                     }
-                    @if (successMessage == true)
-                    {
-                        <MudAlert Severity="Severity.Success">@reqSuccessMessage</MudAlert>
-                    }
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" class="mt-3 me-2" OnClick="@RequestItem">Request</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" class="mt-3" OnClick="@HideForm">Close</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" class="mt-3 me-2" OnClick="@RequestItem">Request</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" class="mt-3" OnClick="@HideForm">Close</MudButton>
                 </MudForm>
             </MudCardContent>
         </MudCard>
@@ -85,11 +80,9 @@
     List<Item> items = ItemService.ReadItem();
     List<ItemRequest> itemReqs { get; set; }
     public string reqItemMessage = "";
-    public string reqSuccessMessage = "";
     public bool isOpen { get; set; }
     bool showRequestForm = false;
     bool showError = false;
-    bool successMessage = false;
     protected override void OnInitialized()
     {
         isOpen = UserServices.CheckTime();
@@ -103,9 +96,7 @@
     {
         Name = "";
         Quantity = 0;
-        successMessage = false;
         reqItemMessage = "";
-        reqSuccessMessage = "";
         showRequestForm = false;
         showError = false;
     }
@@ -116,23 +107,20 @@
             if (String.IsNullOrEmpty(Name) || Quantity == 0)
             {
                 showError = true;
-                successMessage = false;
                 reqItemMessage = "Enter the details properly!";
             }
 
             else
             {
-                showError = false;                
+                showError = false;
                 itemReqs = ItemRequestService.AddItemReq(Name, Quantity, globalState.CurrentUser.Username);
-                successMessage = true;
-                reqSuccessMessage = "Item Requested Successfully! Please wait for approval.";
+                Snackbar.Add("Item Requested Successfully! Please wait for approval.", Severity.Info);
             }
 
         }
         catch (Exception e)
         {
             showError = true;
-            successMessage = false;
             reqItemMessage = e.Message;
         }
     }

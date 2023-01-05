@@ -6,30 +6,29 @@
 @using MudBlazor;
 @using NiwaCoursework.Data;
 @using NiwaCoursework.Services;
+@using MudBlazor.Components
 @inject NavigationManager NavManager
-<MudPaper Height="100%" Width="100%">
+<MudPaper Height="100%" Width="100%" Class="mud-theme-tertiary">
     <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
-        <MudPaper Height="100%" Width="100%" Square="false" Class="mud-theme-primary">
+
             <MudItem xs="8" sm="4" Class="mx-auto pa-6">
                         <MudCard>
                             <MudCardHeader>
                                 <MudText Typo="Typo.h4">Login</MudText>
                             </MudCardHeader>
                             <MudCardContent>
-                                <MudTextField Label="Username" @bind-Value="Username" />
-                                <MudTextField Label="Password"
-                                              InputType="InputType.Password" @bind-Value="Password" />
+                    <MudTextField Label="Username" @bind-Value="Username" LabelColor="MudColor.Tertiary" />
+                        <MudTextField Label="Password"InputType="InputType.Password" @bind-Value="Password" />
                                 @if (showError == true)
                                 {
                                     <MudAlert class="mt-3" Severity="Severity.Error">@loginErrorMessage</MudAlert>
                                 }
                                 <MudCardActions class="row mt-5 justify-content-center">
-                                    <MudButton OnClick="LoginUser" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="col-md-3">Login</MudButton>
+                                    <MudButton OnClick="LoginUser" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Tertiary" Class="col-md-3">Login</MudButton>
                                 </MudCardActions>
                             </MudCardContent>
                         </MudCard>
                 </MudItem>
-        </MudPaper>
     </MudContainer>
 </MudPaper>
 

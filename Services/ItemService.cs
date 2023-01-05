@@ -12,7 +12,6 @@ namespace NiwaCoursework.Services
             return Path.Combine(GetAppDirectoryPath(), "items.json");
         }
 
-        // For Item
         public static List<Item> ReadItem()
         {
             string path = GetItemsPath();

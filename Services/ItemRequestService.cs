@@ -9,7 +9,7 @@ namespace NiwaCoursework.Services
         {
             return Path.Combine(GetAppDirectoryPath(), "itemsRequest.json");
         }
-        // For Item requests
+
         public static List<ItemRequest> ReadItemReq()
         {
             string path = GetItemsRecordPath();

@@ -3,10 +3,10 @@
 @using NiwaCoursework.Services;
 @inject NavigationManager NavManager;
 <MudAppBar Color="Color.Transparent" Fixed="false" Class="mt-4">
-    <MudText Typo="Typo.h5" Class="fw-bold">Inventory Item History</MudText>
+    <MudText Typo="Typo.h5" Class="fw-bold">Inventory Item History of @currentMonth</MudText>
             <MudSpacer />
                 <div class="align-users-center">
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@Report">Show Report</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="@Report">Show Report</MudButton>
                 </div>           
         </MudAppBar>
 <MudSimpleTable Style="overflow-x: auto;" Class="mt-5">
@@ -20,7 +20,7 @@
     <tbody>
         @foreach (var item in items)
         {
-            @if (item.TotalQuantityTaken > 0)
+            @if (item.TotalQuantityTaken > 0 && item.LastApprovedDate.Month == currentMonthInt)
             {
                 <tr>
                     <td>@item.Name</td>
@@ -35,9 +35,12 @@
 
 @code {
     List<Item> items { get; set; }
+    string currentMonth = DateTime.Now.ToString("MMMM");
+    private int currentMonthInt = DateTime.Now.Month;
     protected override void OnInitialized()
     {
         items = ItemRequestService.ReadItem();
+
     }
     public void Report()
     {
