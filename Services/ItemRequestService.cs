@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
+using NiwaCoursework.Data;
 
-namespace NiwaCoursework.Data
+namespace NiwaCoursework.Services
 {
     public class ItemRequestService : ItemService
     {
@@ -92,53 +93,6 @@ namespace NiwaCoursework.Data
             item.TotalQuantityTaken += quantity;
             SaveAllItem(items);
         }
-        public static bool CheckTime()
-        {
-            bool isOpen;
-            string[] workingDays = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
-            TimeOnly currentTime = TimeOnly.FromDateTime(DateTime.Now);
-            DateTime currentFullTime = DateTime.Now;
-            string weekday = currentFullTime.DayOfWeek.ToString();
-            TimeOnly openTime = TimeOnly.Parse("9:00 AM");
-            TimeOnly closeTime = TimeOnly.Parse("4:00 PM");
-            if (currentTime.CompareTo(openTime) >= 0 && currentTime.CompareTo(closeTime) <= 0 && workingDays.Contains(weekday))
-            {
-                isOpen = true;
-            }
-            else
-            {
-                isOpen = false;
-            }
-            return isOpen;
-        }
-        public static List<double> GetChartData()
-        {
-            List<Item> items = ReadItem();
-            List<double> quantity = new();
-            foreach (var item in items)
-            {
-               
-                if (item.TotalQuantityTaken > 0)
-                {
-                    quantity.Add(item.TotalQuantityTaken);
-                }
 
-            }
-
-            return quantity;
-        }
-        public static List<string> GetChartLabel()
-        {
-            List<Item> items = ReadItem();
-            List<string> name = new();
-            foreach (var item in items)
-            {
-                if (item.TotalQuantityTaken > 0)
-                {
-                    name.Add(item.Name);
-                }
-            }
-            return name;
-        }
     }
 }

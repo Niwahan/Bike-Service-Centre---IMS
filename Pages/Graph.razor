@@ -1,5 +1,6 @@
 ﻿@page "/graph"
-@using NiwaCoursework.Data
+@using NiwaCoursework.Data;
+@using NiwaCoursework.Services;
 @inject NavigationManager NavManager;
 
 <MudAppBar Color="Color.Transparent" Fixed="false" Class="mt-4">
@@ -17,8 +18,8 @@
 
     protected override void OnInitialized()
     {
-        datas = ItemRequestService.GetChartData();
-        labels = ItemRequestService.GetChartLabel();
+        datas = BarChartService.GetChartData();
+        labels = BarChartService.GetChartLabel();
         doubleDatas = datas.ToArray();
         stringLabels = labels.ToArray();
         Series = new List<ChartSeries>()

@@ -1,9 +1,9 @@
 ﻿using System.Data;
 using System.Reflection;
 using System.Text.Json;
+using NiwaCoursework.Data;
 
-
-namespace NiwaCoursework.Data
+namespace NiwaCoursework.Services
 {
 
     public class UserServices
@@ -112,7 +112,25 @@ namespace NiwaCoursework.Data
             SaveAll(users);
             return users;
         }
-
+        public static bool CheckTime()
+        {
+            bool isOpen;
+            string[] workingDays = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
+            TimeOnly currentTime = TimeOnly.FromDateTime(DateTime.Now);
+            DateTime currentFullTime = DateTime.Now;
+            string weekday = currentFullTime.DayOfWeek.ToString();
+            TimeOnly openTime = TimeOnly.Parse("9:00 AM");
+            TimeOnly closeTime = TimeOnly.Parse("4:00 PM");
+            if (currentTime.CompareTo(openTime) >= 0 && currentTime.CompareTo(closeTime) <= 0 && workingDays.Contains(weekday))
+            {
+                isOpen = true;
+            }
+            else
+            {
+                isOpen = false;
+            }
+            return isOpen;
+        }
     }
 }
 

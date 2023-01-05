@@ -1,8 +1,9 @@
 ﻿using System.Data;
 using System.Reflection;
 using System.Text.Json;
+using NiwaCoursework.Data;
 
-namespace NiwaCoursework.Data
+namespace NiwaCoursework.Services
 {
     public class ItemService : UserServices
     {

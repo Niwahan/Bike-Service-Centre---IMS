@@ -1,5 +1,6 @@
 ﻿@page "/inventorylog"
 @using NiwaCoursework.Data;
+@using NiwaCoursework.Services;
 @if (isOpen == true)
 {
     @if (globalState.CurrentUser?.Role == "Staff")
@@ -91,7 +92,7 @@
     bool successMessage = false;
     protected override void OnInitialized()
     {
-        isOpen = ItemRequestService.CheckTime();
+        isOpen = UserServices.CheckTime();
         itemReqs = ItemRequestService.ReadItemReq();
     }
     public void ShowForm()
