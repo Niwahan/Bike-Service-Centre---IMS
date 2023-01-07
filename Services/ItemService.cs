@@ -55,18 +55,6 @@ namespace NiwaCoursework.Services
             SaveAllItem(items);
             return items;
         }
-        public static List<Item> UpdateItem(string name, int quantity)
-        {
-            List<Item> items = ReadItem();
-            Item item = items.FirstOrDefault(x => x.Name == name);
-            if (item == null)
-            {
-                throw new Exception("Item not found.");
-            }
-            item.Quantity += quantity;
-            SaveAllItem(items);
-            return items;
-        }
         public static List<Item> DeleteItem(string name)
         {
             List<Item> items = ReadItem();
